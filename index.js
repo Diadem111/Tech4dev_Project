@@ -25,5 +25,5 @@ app.use(express.json())
 app.use('/', routes)
 app.use(express.json()) // for parsing application/json
 
-const PORT = config.SERVER_PORT || 5000
+const PORT = config.SERVER_PORT || 6000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

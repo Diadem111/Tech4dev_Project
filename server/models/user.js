@@ -8,16 +8,16 @@ const UserSchema = new Schema(
       type: String,
       required: true
     },
-    lastName: {
+    surName: {
       type: String,
       required: true
     },
     middleName: {
       type: String
     },
-    dateOfBirth: {
-      type: Date
-    },
+    // dateOfBirth: {
+    //   type: Date
+    // },
     gender: {
       type: String,
       enum: ['male', 'female']
@@ -39,23 +39,23 @@ const UserSchema = new Schema(
       state: String,
       zipCode: String
     },
-    religion: {
-      type: String
-    },
-    stateOfOrigin: {
-      type: String
-    },
-    nationality: {
-      type: String
-    },
-    maritalStatus: {
-      type: String,
-      enum: ['single', 'married', 'widowed']
-    },
+    // religion: {
+    //   type: String
+    // },
+    // stateOfOrigin: {
+    //   type: String
+    // },
+    // nationality: {
+    //   type: String
+    // },
+    // maritalStatus: {
+    //   type: String,
+    //   enum: ['single', 'married', 'widowed']
+    // },
     phoneNumber: {
       type: String
     },
-    file:{
+    passport:{
       type:String
     },
     otp: {

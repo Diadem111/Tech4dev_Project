@@ -14,8 +14,25 @@ const StudentSchema = new Schema(
       unique: true,
       index: true
     },
+     dateOfBirth: {
+      type: Date
+    },
+      religion: {
+      type: String
+    },
+    stateOfOrigin: {
+      type: String
+    },
+    nationality: {
+      type: String
+    },
+    maritalStatus: {
+      type: String,
+      enum: ['single', 'married', 'widowed']
+    },
     parentName: String,
-    guardianName: String,
+    parentOccupation:String,
+    // guardianName: String,
     class: {
       type: String
     },
@@ -35,6 +52,9 @@ const StudentSchema = new Schema(
       list: [String]
     },
     signature: {
+      list: [String]
+    },
+    recommedationLetter:{
       list: [String]
     },
     isAdmitted: {
