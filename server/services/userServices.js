@@ -97,6 +97,29 @@ const PostregisterUser = async (requestFile, requestUser) => {
     // send registration configuration email to the user
 }
 
+const verifyOTP = async (receivedOTP) => {
+ try{
+    // find if the otp match any otp in the database
+   const user = await User.findOne({otp: receivedOTP})
+  
+//    if it couldnt find any
+if (!user){
+    throw new Error("Invalid OTP");
+}
+// first check if there is no otpexpiry in d database and check if the otpexpiry in the database is less than the new date
+if (!user.otpExpiry || new Date(user.otpExpiry) <= new Date()){
+    throw new Error("OTP has expired") 
+
+    // clear otp and otpExpiry from the database if its expired
+    await User.updateOne({ _id:user._id}, { $unset: {otp : "", otpExpiry: ""}})
+
+    return {message : "OTP verfied successfully"}
+}
+   
+}catch(err){
+    throw  err
+ }
+}
 module.exports = {
     PostregisterUser
 }

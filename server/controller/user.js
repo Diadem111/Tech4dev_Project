@@ -27,4 +27,7 @@ const register = await userServices.PostregisterUser(req.file,req.body)
     }
 }
 
+
+const
+
 module.exports = {home,registerUser}
