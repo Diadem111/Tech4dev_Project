@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 const bcrypt = require("bcrypt");
 
+
 const UserSchema = new Schema(
   {
     firstName: {
@@ -34,10 +35,7 @@ const UserSchema = new Schema(
       type: String
     },
     address: {
-      street: String,
-      city: String,
-      state: String,
-      zipCode: String
+     type:String
     },
     // religion: {
     //   type: String
@@ -56,16 +54,20 @@ const UserSchema = new Schema(
       type: String
     },
     passport:{
-      type:String
-    },
+     type:String
+        },
     otp: {
       type: String
     },
     otpExpiry: {
       type: Date
     },
-    refreshToken: String
+    codeReset: { type: String, default: null },
+    codeExpire: { type: Date, default: null }
+
+    // refreshToken: String
   },
+  
 
   { timestamps: true }
 )
@@ -83,6 +85,19 @@ UserSchema.pre("save", function (next) {
     }
   })
 })
+
+UserSchema.methods.validatePassword = function (password, callback) {
+  // console.log(this)
+  // console.log(password)
+  bcrypt.compare(password, this.password, (err, same) => {
+      if (!err) {
+          callback(err, same)
+      } else {
+          next()
+      }
+  })
+}
+
 const User = mongoose.model('users', UserSchema)
 
 module.exports = User

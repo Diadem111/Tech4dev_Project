@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt")
+const jwt = require('jsonwebtoken')
 const { User, Teacher, Student } = require('../models')
 const path = require("path")
 const Cloudinary = require("../middleware/cloudinary")
@@ -5,103 +7,21 @@ const multer = require("multer")
 const { sendOTPByEmail } = require("../utils/sendMail")
 
 
+// const PostregisterUser = async (requestFile, requestUser) => {
+//     const { role, ...userData } = requestUser
 
-const PostregisterUser = async (requestFile, requestUser) => {
-    const { role, ...userData } = requestUser
+//     let imgLink;
 
-    let imgLink;
-
-    try {
-        // check if the email/user exist
-        const userExist = await User.findOne({
-            email: requestUser.email,
-        })
-        if (userExist) {
-            throw new Error("Email exist!")
-        }
+//     try {
+//         // check if the email/user exist
 
 
-        // check if password == to confirmpassword
-        if (requestUser.password !== requestUser.confirmPassword) {
-            throw new Error("Passwords do not match!")
+//     } catch (err) {
+//         throw new Error(err.message);
+//         console.log(err.message)
+//     }
 
-        }
-        if (requestFile) {
-            const uploadToCloud = await Cloudinary.uploader.upload(requestFile.path);
-            // console.log(uploadToCloud)
-
-            // upload image to cloudinary
-
-            if (!uploadToCloud) {
-                throw new Error("FAILED TO UPLOAD TO CLOUD")
-            }
-
-            let imgLink = uploadToCloud.url
-
-            // console.log(imgLink)
-
-
-        }
-
-
-        // create new instance of user
-        const newUser = new User({
-            ...userData,
-            passport: imgLink,
-            otp: null,   // initialize opt and otpexpiry as null
-            otpExpiry: null
-        })
-
-
-        // save the user to the database
-        await newUser.save()
-
-        //    generation of verification otp
-        const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString() // Generate a 4-digit OTP
-        const expireOtp = new Date();
-        expireOtp.setTime(expireOtp.getTime() + (30 * 60 * 1000));  //set expire time to 30 minutsees
-
-        // update user with otp and otpexpiry
-        newUser.otp = verifyOtp;
-        newUser.otpExpiry = expireOtp;
-        await newUser.save()
-
-        // send OTP by email
-        await sendOTPByEmail(requestUser.email, verifyOtp, expireOtp)
-
-        //create new record based on role
-
-        let newRecord;
-        if (role === "student") {
-
-            // set the user id into the user as indicated in the model
-            const studentData = { user: newUser._id, ...userData }
-            const newStudent = new Student({
-                ...studentData,
-                role: role
-            })
-            newRecord = await newStudent.save()
-
-        } else if (role === "teacher") {
-            const teacherData = { user: newUser._id, ...userData }
-            const newTeacher = new Teacher({
-                ...teacherData,
-                role: role
-            })
-            newRecord = await newTeacher.save()
-        } else {
-            throw new Error("Role Invalid")
-        }
-
-        return newRecord
-       
-
-    } catch (err) {
-        throw new Error(err.message);
-        console.log(err.message)
-    }
-
-}
+// }
 
 const verifyOTP = async (receivedOTP) => {
     try {
@@ -126,8 +46,132 @@ const verifyOTP = async (receivedOTP) => {
         throw err
     }
 }
+
+
+const LoginUser = async (userInfo) => {
+    try {
+        const { email, password } = userInfo;
+        const data = await User.findOne({ email });
+        
+        if (!data) {
+            throw new Error("Student not Found");
+        }
+        
+        const same = await new Promise((resolve, reject) => {
+            data.validatePassword(password, (err, same) => {
+                if (err) {
+                    reject(new Error("Error occurred"));
+                } else {
+                    resolve(same);
+                }
+            });
+        });
+
+        if (!same) {
+            throw new Error("Invalid Credentials!");
+        }
+
+        const token = jwt.sign({ email }, process.env.JWT_SEC, { expiresIn: "1h" });
+        return token;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+};
+
+// Function to generate a random 5-digit number
+
+const generateRandomNumber = () => {
+    return Math.floor(10000 + Math.random() * 90000);
+  };
+  
+
+// forgot password - send password reset link to student's email
+const forgetPassword =async  (info) => {
+try {
+    const {email} = info;
+
+    // check if student with the provided email exists
+    const student = await User.findOne({ email})
+    if(!student){
+        throw new Error ("Student not found")
+    }
+
+    // Generate 5-digit reset token
+    const codeReset = generateRandomNumber();
+console.log(codeReset)
+
+// expiration for the token
+const codeExpire = new Date();
+codeExpire.setTime(codeExpire.getTime() + (10* 60 * 1000)) //set to 10 mins
+
+// send the four digit code to the database
+await User.findOneAndUpdate({email}, {codeReset, codeExpire})
+    // Send password reset email to the student
+    // send OTP by sendMail\
+    const subject = `Password Reset Request`
+    const htmlContent = `<h3>Dear ${email},</h3>
+    <p>You password reset. Copy the 5 digit code below to reset your password:</p>
+    <p>{codeReset}</p>
+    <p>This OTP is valid for 10 minutes.</p>
+    <p>If you did not request this, please ignore this email.</p>
+    <p>Best Regards,</p>
+    <p>SCHOOLBASE team</p>`
+
+    <p>Best Regards,</p>
+    <p>SCHOOLBASE team</p>`
+     await sendOTPByEmail(email, subject, htmlContent)
+   
+}catch (err){
+    throw new Error(err.message)
+}
+}
+
+
+
+// reset passowrd by token and verify by jwt
+const resetPassword = async (requestInfo) =>{
+    try{
+        const {codeReset , newPassword, confirmPassword} = requestInfo;
+        console.log(codeReset )
+
+    // Verify if passwords match
+    if (newPassword !== confirmPassword) {
+        throw new Error("Passwords do not match")
+        
+      }
+
+       // Verify if pin is provided
+    if (!codeReset ) {
+        throw new Error("Pin is required")
+      }
+  
+      const existingCode = await User.findOne({ codeReset });
+
+      if (!existingCode) {
+        throw new Error("Invalid code")
+      }
+      // 2. check if the code is valid or expired 
+      if (existingCode.codeReset !== codeReset || existingCode.codeExpire < new Date()) {
+        throw new Error("Sorry, the code is expired")
+      }
+
+     // Hash the new password
+     const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+     // Update user's password in the database
+     await User.findOneAndUpdate({ codeReset }, { newPassword: hashedPassword, codeReset: null, codeExpire: null })
+  
+      
+}catch (err){
+        throw new Error(err.message)
+    }
+}
+
 module.exports = {
-    PostregisterUser,
+    // PostregisterUser,
     verifyOTP,
+    LoginUser,
+    forgetPassword,
+    resetPassword,
 
 }

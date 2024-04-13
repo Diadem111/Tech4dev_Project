@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 // Create a transporter object using SMTP transport
 
 // Function to send OTP via email
-async function sendOTPByEmail(email, verifyOtp,expireOtp) {
+async function sendOTPByEmail(email, userName, subject,htmlContent) {
   // Create a transporter object using SMTP transport
   const transporter = nodemailer.createTransport({
     service: 'Gmail', // Or your email service provider
@@ -18,15 +18,15 @@ async function sendOTPByEmail(email, verifyOtp,expireOtp) {
   const mailOptions = {
     from: 'dolwithneybright1@gmail.com',
     to: email,
-    subject: 'OTP Verification',
-    text: `Your OTP is: ${verifyOtp}, kindly use because OTP will expire in ${expireOtp}`
+    subject: subject,
+    text: htmlContent,
   };
 
   // Send mail with defined transport object
   try {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent: ' + info.response);
-    return verifyOtp; // Return the OTP for verification
+    // return verifyOtp; // Return the OTP for verification
   } catch (error) {
     console.error('Error sending email:', error);
     throw new Error('Failed to send OTP email');
