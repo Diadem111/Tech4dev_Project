@@ -1,0 +1,128 @@
+[
+    {
+      "text": "What is the capital of France?",
+      "subject": "Geography",
+      "className": "Class 10",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "London", "isAnswer": false},
+        {"text": "Paris", "isAnswer": true},
+        {"text": "Berlin", "isAnswer": false},
+        {"text": "Rome", "isAnswer": false}
+      ],
+      "correctAnswer": "Paris",
+      "marks": 1
+    },
+    {
+      "text": "Who wrote 'To Kill a Mockingbird'?",
+      "subject": "Literature",
+      "className": "Class 9",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Mark Twain", "isAnswer": false},
+        {"text": "Harper Lee", "isAnswer": true},
+        {"text": "J.K. Rowling", "isAnswer": false},
+        {"text": "George Orwell", "isAnswer": false}
+      ],
+      "correctAnswer": "Harper Lee",
+      "marks": 1
+    },
+    {
+      "text": "Which planet is known as the 'Red Planet'?",
+      "subject": "Science",
+      "className": "Class 8",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Venus", "isAnswer": false},
+        {"text": "Mars", "isAnswer": true},
+        {"text": "Jupiter", "isAnswer": false},
+        {"text": "Saturn", "isAnswer": false}
+      ],
+      "correctAnswer": "Mars",
+      "marks": 1
+    },
+    {
+      "text": "What is the chemical symbol for water?",
+      "subject": "Science",
+      "className": "Class 7",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "H2O", "isAnswer": true},
+        {"text": "CO2", "isAnswer": false},
+        {"text": "O2", "isAnswer": false},
+        {"text": "CH4", "isAnswer": false}
+      ],
+      "correctAnswer": "H2O",
+      "marks": 1
+    },
+    {
+      "text": "Who painted the Mona Lisa?",
+      "subject": "Art",
+      "className": "Class 10",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Vincent van Gogh", "isAnswer": false},
+        {"text": "Leonardo da Vinci", "isAnswer": true},
+        {"text": "Pablo Picasso", "isAnswer": false},
+        {"text": "Claude Monet", "isAnswer": false}
+      ],
+      "correctAnswer": "Leonardo da Vinci",
+      "marks": 1
+    },
+    {
+      "text": "What is the largest mammal in the world?",
+      "subject": "Biology",
+      "className": "Class 9",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Elephant", "isAnswer": false},
+        {"text": "Blue Whale", "isAnswer": true},
+        {"text": "Giraffe", "isAnswer": false},
+        {"text": "Hippopotamus", "isAnswer": false}
+      ],
+      "correctAnswer": "Blue Whale",
+      "marks": 1
+    },
+    {
+      "text": "Which country is famous for the Great Wall?",
+      "subject": "History",
+      "className": "Class 8",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "China", "isAnswer": true},
+        {"text": "India", "isAnswer": false},
+        {"text": "Egypt", "isAnswer": false},
+        {"text": "Italy", "isAnswer": false}
+      ],
+      "correctAnswer": "China",
+      "marks": 1
+    },
+    {
+      "text": "What is the chemical symbol for gold?",
+      "subject": "Chemistry",
+      "className": "Class 10",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Au", "isAnswer": true},
+        {"text": "Ag", "isAnswer": false},
+        {"text": "Fe", "isAnswer": false},
+        {"text": "Cu", "isAnswer": false}
+      ],
+      "correctAnswer": "Au",
+      "marks": 1
+    },
+    {
+      "text": "Who is known as the 'Father of Computers'?",
+      "subject": "Technology",
+      "className": "Class 9",
+      "type": "multiple-choice",
+      "options": [
+        {"text": "Alan Turing", "isAnswer": true},
+        {"text": "Bill Gates", "isAnswer": false},
+        {"text": "Steve Jobs", "isAnswer": false},
+        {"text": "Mark Zuckerberg", "isAnswer": false}
+      ],
+      "correctAnswer": "Alan Turing",
+      "marks": 1
+    }
+]

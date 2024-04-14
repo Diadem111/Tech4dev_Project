@@ -63,7 +63,20 @@ const UserSchema = new Schema(
       type: Date
     },
     codeReset: { type: String, default: null },
-    codeExpire: { type: Date, default: null }
+    codeExpire: { type: Date, default: null },
+    
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Teacher'
+  },
+  student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Student'
+  },
+  application: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Application'
+  },
 
     // refreshToken: String
   },

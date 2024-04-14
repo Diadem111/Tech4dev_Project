@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {newApplicantSystem} = require("../controller/newApplicant");
+const {newApplicant} = require("../controller");
 const upload = require("../middleware/multer")
 
 
@@ -9,5 +9,5 @@ router.post("/upload", upload.fields([{name:'passport',maxCount: undefined},
  {name:'recommedationLetter', maxCount: undefined},
  {name:"signature", maxCount:undefined},
  {name:"additionalDocuments", maxCount:undefined}
-]), newApplicantSystem)
+]),newApplicant.newApplicantSystem)
 module.exports = router
