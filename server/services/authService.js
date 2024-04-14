@@ -82,7 +82,7 @@ const LoginUser = async (userInfo) => {
 // dashboard authorization
 const getDashboard = async (req) => {
     try {
-        const token = req.headers.authorization.split(" ")[1];
+        const token = req.headers.authorization;
         // console.log(token);
 
         // Verify if token is legitimate
@@ -90,39 +90,20 @@ const getDashboard = async (req) => {
 
         // Extract email from the decoded token
         const email = decodedToken.email;
+        const user = await User.findOne({ email });
 
-        // Find user in the database using the extracted email
-        const userInfo = await User.aggregate([
-            { $match: { email } },
-            {
-              $lookup: {
-                from: 'Teacher',
-                localField: '_id',
-                foreignField: 'user',
-                as: 'teacher'
-              }
-            },
-            {
-              $lookup: {
-                from: 'Student',
-                localField: '_id',
-                foreignField: 'user',
-                as: 'student'
-              }
-            },
-            {
-              $lookup: {
-                from: 'Application',
-                localField: '_id',
-                foreignField: 'user',
-                as: 'application'
-              }
-            }
-            // Add more $lookup stages as needed
-          ]).exec();
-          
-          // Extract the first result (assuming findOne)
-          const user = userInfo[0];
+
+        // Fetch related data from other collections
+        const teacher = await Teacher.findOne({ user: user._id });
+        const student = await Student.findOne({ user: user._id });
+        const application = await Application.findOne({ user: user._id });
+
+        return {
+            user,
+            teacher,
+            student,
+            application
+        };
  } catch (error) {
         if (error.name === 'TokenExpiredError') {
             throw new Error('Token has expired');

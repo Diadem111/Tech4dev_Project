@@ -1,9 +1,9 @@
-const classSchedule = require("../models/classSchedule");
+const {ClassSchedule} = require("../models");
 
 
 const getScheduleByCurrentWeek  =  async (startTime, endTime) => {
     // find from the database by start and end time such that it will return all schedule that it is equal or less than end time
-    const scheduleForTheWeek = await classSchedule.find({
+    const scheduleForTheWeek = await ClassSchedule.find({
         date: { $gte: startTime, $lte: endTime }
     })
   // check if there is a schedule for the week
@@ -17,7 +17,8 @@ const getAllClassSchedule = async (requestUser) => {
     if (!requestUser) throw new Error(`Unauthorized`)
 
     // get all the schedule
-    const classTimeTable = await classSchedule.find()
+    const classTimeTable = await ClassSchedule.find()
+    console.log(classTimeTable)
     if (!classTimeTable) throw new Error(`No class-schedule found `)
     return classTimeTable
 }
@@ -32,13 +33,13 @@ const getClassScheduleByClass = async (requestUser, requestRole, requestClass) =
 
     // filter the schema by student class
 
-    const uniqueClassSchedule = await classSchedule.find({ class: studentClass })
+    const uniqueClassSchedule = await ClassSchedule.find({ class: studentClass })
     return uniqueClassSchedule
 }
 
 
 const getClassScheduleById = async (scheduleId) => {
-    const getTimeTable = await classSchedule.findOne({ _id: scheduleId })
+    const getTimeTable = await ClassSchedule.findOne({ _id: scheduleId })
     if (!getTimeTable) throw new Error(`class-schedule not found`)
     return getTimeTable
 }
@@ -46,7 +47,7 @@ const getClassScheduleById = async (scheduleId) => {
 const getClassScheduleByIdAndUpdate = async (scheduleId, updateBody) => {
     //    update schedule by id
     if (!scheduleId) throw new Error(`class Schedule  not found: ${scheduleId} `)
-    const updateById = await classSchedule.findByIdAndUpdate(scheduleId, updateBody, {
+    const updateById = await ClassSchedule.findByIdAndUpdate(scheduleId, updateBody, {
         new: true,
         $set: updateBody
     })
@@ -57,13 +58,14 @@ const getClassScheduleByIdAndDelete = async (scheduleId) => {
     // find if the schedule exist 
     if (!scheduleId) throw new Error(` class Schedule doesn't exist`)
 
-    const deleteSchedule = await classSchedule.findByIdAndDelete(scheduleId)
+    const deleteSchedule = await ClassSchedule.findByIdAndDelete(scheduleId)
     return deleteSchedule
 }
 
 
 module.exports = {
     getScheduleByCurrentWeek,
+    // getAllClassSchedule
     getAllClassSchedule,
     getClassScheduleByClass,
     getClassScheduleById,

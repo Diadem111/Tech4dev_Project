@@ -3,15 +3,20 @@ const router = express.Router()
 const {classSchedule} = require("../controller")
 const {isLoggedIn, isStudent} = require("../middleware/auth")
 
-router.get("/all-schedule",isLoggedIn, classSchedule.getClassScheduleByClass)
+router.get("/scheduleByClass",isLoggedIn,isStudent, classSchedule.getClassScheduleByClass)
 
 // Define routes
 
-router.post('/schedule', classSchedule.ScheduleTimeTable)
-router.get("/weeklyschedule", classSchedule.getScheduleByCurrentWeek)
-router.get("/schedule/:id",classSchedule.getClassScheduleById)
-router.put("/update-schedule/:id",classSchedule.getClassScheduleByIdAndUpdate)
-router.delete("/delete-schedule/:id",classSchedule.getClassScheduleByIdAndDelete )
+router.get("/home", classSchedule.home) //done
+router.post('/create-schedule', classSchedule.ScheduleTimeTable) //done
+router.get("/weeklyschedule", classSchedule.getScheduleByCurrentWeek)//done
+router.get("/schedule/:id",classSchedule.getClassScheduleById) //done
+router.put("/update-schedule/:id",classSchedule.getClassScheduleByIdAndUpdate) //done
+router.delete("/delete-schedule/:id",classSchedule.getClassScheduleByIdAndDelete ) //done
+router.get("/all-schedule", isLoggedIn,classSchedule.getAllClassSchedule) //done
 
 
 module.exports = router
+
+// 661bd67f23ed7ce6202fdf9f
+// 661bd60d23ed7ce6202fdf99

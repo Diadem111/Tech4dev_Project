@@ -1,4 +1,5 @@
 module.exports.userServices = require("./authService")
 module.exports.newApplicant= require("./newApplicant")
-module.exports.classSchedule = require("./classSchedule")
+module.exports.classScheduleService = require("./classScheduleService")
 module.exports.assessment = require("./assessment")
+module.exports.attendanceService = require("./attendanceService")

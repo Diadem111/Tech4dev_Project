@@ -2,6 +2,15 @@ const express = require("express");
 const classSchedule = require("../models/classSchedule");
 const { classScheduleService } = require('../services')
 
+
+
+const home = (req, res) => {
+  res.status(200).json({
+      status: "ok",
+      server: " welcome to the home page",
+  });
+}
+
 const changeTimeSTtringToDate = (timeString) => {
   const [time, period] = timeString.split(" ");
   const [hours, minutes] = time.split(":").map(Number);
@@ -64,7 +73,7 @@ async function ScheduleTimeTable(req, res) {
   }
   catch (err) {
     console.log(err.message)
-    res.status(400).json({ message: "err.message" })
+    res.status(400).json({ message: "err.message", error:err.message})
   }
 }
 
@@ -94,6 +103,7 @@ async function ScheduleTimeTable(req, res) {
 const getAllClassSchedule = async (req, res) => {
   try {
     const user = req.user
+    console.log(user)
     const schedule = await classScheduleService.getAllClassSchedule(user)
     return res.status(201).json({ message: "success", schedule })
   } catch (err) {
@@ -183,6 +193,7 @@ const getClassScheduleByClass = async (req, res) => {
 }
 
 module.exports = {
+  home,
 //   getScheduleByCurrentWeek,
   ScheduleTimeTable,
   getAllClassSchedule,
