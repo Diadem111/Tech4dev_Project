@@ -59,7 +59,7 @@ const LoginUser = async (userInfo) => {
         const same = await new Promise((resolve, reject) => {
             data.validatePassword(password, (err, same) => {
                 if (err) {
-                    reject(new Error("Error occurred"));
+                    reject(new Error("Error occurred", err));
                 } else {
                     resolve(same);
                 }
