@@ -3,6 +3,7 @@ const { assessmentService } = require('../services')
 // Question controllers
 const createQuestion = async (req, res) => {
   try {
+    console.log(req.body)
     const question = await assessmentService.createQuestion(req.body)
     return res.status(201).json({
       message: 'success',
