@@ -6,16 +6,16 @@ const { assessment } = require('../controller')
 // Define routes
 
 // Questions
-router.post('/question', assessment.createQuestion)
-router.post('/add-question/:id', assessment.addQuestionsToAssessment)
-router.get('/question/:id', assessment.getQuestionById)
-router.get('/question/filter', assessment.getQuestionByFilter)
-router.get('/question/:class', assessment.getQuestionsByClass)
+router.post('/question', assessment.createQuestion) //done
+router.post('/add-question/:id', assessment.addQuestionsToAssessment) //done
+router.get('/question/:id', assessment.getQuestionById) //done
+router.get('/questionByFilter', assessment.getQuestionByFilter) //done
+router.get('/questionByClass', assessment.getQuestionsByClass) //done
 
 // Assessment
-router.post('/create', assessment.createAssessment)
-router.put('/set-mark/:id', assessment.setAssessmentTotalMarks)
-router.get('/:id', assessment.getAssessment)
+router.post('/create', assessment.createAssessment) //done
+router.put('/set-mark/:id', assessment.setAssessmentTotalMarks) //done
+router.get('/:id', assessment.getAssessment) //done
 
 // Assessment recording and grading
 router.post('/:id/create-record', assessment.createAssessmentRecord)
@@ -25,3 +25,6 @@ router.put('/mark/:id', assessment.markAssessment)
 router.get('/responses/:studentId', assessment.getStudentsResponsesAndCorrectAnswer)
 
 module.exports = router
+
+
+//662402f6c01440b8ff5d2d6f

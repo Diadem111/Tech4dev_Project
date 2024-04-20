@@ -24,12 +24,14 @@ const getAllClassSchedule = async (requestUser) => {
 }
 
 
-const getClassScheduleByClass = async (requestUser, requestRole, requestClass) => {
+const getClassScheduleByClass = async (requestUser, requestRole) => {
     // ensure the user isLoggedIn and is a student 
-    if (!requestUser || requestRole != "student") throw new Error(`Unauthorized: Only student can view`)
+    // if (!requestUser || requestRole != "student") throw new Error(`Unauthorized: Only student can view`)
+
+    let studentClass = requestUser.class;
 
     // get the class of the loggedIn student
-    const studentClass = requestClass;
+    // const studentClass = requestClass;
 
     // filter the schema by student class
 

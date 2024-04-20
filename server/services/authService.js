@@ -80,38 +80,35 @@ const LoginUser = async (userInfo) => {
 
 
 // dashboard authorization
-const getDashboard = async (req) => {
+const getDashboard = async (userData) => {
     try {
-        const token = req.headers.authorization;
-        // console.log(token);
+        const { _id } = userData;
+    
+        const user = await User.findOne({ _id });
+            
 
-        // Verify if token is legitimate
-        const decodedToken = await jwt.verify(token, process.env.JWT_SEC);
-
-        // Extract email from the decoded token
-        const email = decodedToken.email;
-        const user = await User.findOne({ email });
-
-
+              
         // Fetch related data from other collections
-        const teacher = await Teacher.findOne({ user: user._id });
-        const student = await Student.findOne({ user: user._id });
-        const application = await Application.findOne({ user: user._id });
-
+        let teacher, student, application;
+            if (user.role === 'teacher') {
+              teacher = await Teacher.findOne({ user: _id });
+            } else if (user.role === 'student') {
+              student = await Student.findOne({ user: _id });
+            }
+        
+            application = await Application.findOne({ user: _id });
+        
         return {
             user,
             teacher,
             student,
             application
         };
+
+          
  } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            throw new Error('Token has expired');
-        } else if (error.name === 'JsonWebTokenError') {
-            throw new Error('Invalid token');
-        } else {
-            throw new Error(error);
-        }
+    throw new Error(error.message);
+
     }
 };
 

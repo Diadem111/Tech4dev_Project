@@ -32,7 +32,9 @@ const getQuestionById = async (req, res) => {
 
 const getQuestionsByClass = async (req, res) => {
   try {
-    const questions = await assessmentService.getQuestionsByClass(req.body)
+    const { className } = req.query;
+    console.log(className)
+    const questions = await assessmentService.getQuestionsByClass(className)
     return res.status(200).json(questions)
   } catch (error) {
     return res.status(500).json({
@@ -43,16 +45,22 @@ const getQuestionsByClass = async (req, res) => {
 
 const getQuestionByFilter = async (req, res) => {
   try {
-    const questions = await assessmentService.getQuestionByFilter(req.body)
+    console.log(req.query)
+    filter = req.query
+    // console.log(filter)
+    const questions = await assessmentService.getQuestionByFilter(filter)
     return res.status(200).json(questions)
   } catch (error) {
-    return res.status(500).json({ error: error.message })
+    return res.status(500).json({
+      error: error.message
+    })
   }
 }
 
 // Assessment controllers
 const createAssessment = async (req, res) => {
   try {
+    console.log(req.body)
     const assessmentData = req.body
     const assessment = await assessmentService.createAssessment(assessmentData)
     return res.status(201).json({

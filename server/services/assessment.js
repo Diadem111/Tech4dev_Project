@@ -1,21 +1,21 @@
-const { Assessment, Question, AssessmentRecord } = require('../models')
+const { Assessment, Questions, AssessmentRecord } = require('../models')
 
 const createQuestion = async (questionData) => {
   // Ther is need to handle media file upload for questions later
-  const questionExists = await Question.findOne({
+  const questionExists = await Questions.findOne({
     text: questionData.text,
     type: questionData.type
   })
   if (questionExists) {
     throw new Error('Question already exists')
   }
-  const newQuestion = new Question(questionData)
+  const newQuestion = new Questions(questionData)
   await newQuestion.save()
   return newQuestion
 }
 
 const getQuestionById = async (questionId) => {
-  const question = await Question.findById({
+  const question = await Questions.findById({
     _id: questionId
   })
   await question.populate('createdBy')
@@ -23,16 +23,32 @@ const getQuestionById = async (questionId) => {
   return question
 }
 
-const getQuestionsByClass = async (question) => {
-  const questions = await Question.findAll({
-    className: question.className
-  })
-  if (!questions) throw new Error(`No questions found for this class ${question.className}`)
-  return questions
+const getQuestionsByClass = async ( className) => {
+  try {
+    const questions = await Questions.find({ className });
+    if (!questions || questions.length === 0) {
+      throw new Error(`No questions found for class: ${className}`);
+    }
+    return questions;
+  } catch (error) {
+    throw new Error(`Error retrieving questions: ${error.message}`);
+  }
 }
 
 const getQuestionByFilter = async (filter) => {
-  const questions = await Question.find(filter)
+  console.log(filter)
+  const query = {};
+
+  // // Iterate through each key-value pair in the filter object
+  // // Iterate through each key-value pair in the filter object
+  for (const key in filter) {
+    if (Object.hasOwnProperty.call(filter, key) && key !== '_id') {
+      // Exclude the _id key and construct the query based on other key-value pairs
+      query[key] = filter[key];
+    }
+  }
+  console.log(query)
+  const questions = await Questions.find(query)
   if (
     !questions || questions.length === 0
   ) throw new Error('No questions found for the filter you provided')

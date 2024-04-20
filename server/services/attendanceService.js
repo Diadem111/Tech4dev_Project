@@ -44,28 +44,71 @@ const getStudentsAbsent = async () => {
 
 // To save the attendance marked by teacher into the database.
 const markAttendance = async (attendanceData, teacher_id) => {
+    const { student_id, isPresent } = attendanceData;
+
+  // Check if attendance has already been marked for the student today
+  const existingAttendance = await Attendance.findOne({
+    student: student_id,
+    markedAt: today
+  });
+
+  console.log(today)
   // const classStudents = await Students.find({ class: studentClass})
   // // This could be a middleware too...
 
-  // if (classStudents.length == 0) {
+    // The logic there is that if there is a date like today's date it has been marked else not
 
-  //   throw new Error('The class selected is not valid')
+  // if (existingAttendance) {
+  //   throw new Error(`Attendance has already been marked for student ${student_id} today`);
   // }
-  // The logic there is that if there is a date like today's date it has been marked else not
 
-  const isItToday = await Attendance.findOne({ markedAt: today })
+  
+  // //
+  // for (let i = 0; i < attendanceData.length; i++) {
+  //   const { student_id, isPresent } = attendanceData[i]
+  //   const data = { student: student_id, isPresent, markedBy: teacher_id, markedAt: today }
+  //   console.log(data)
+  //   const attendanceMarked = new Attendance(data)
+  //   await attendanceMarked.save()
+  // }
 
-  if (isItToday) {
-    throw new Error('The attendance has been marked')
-  }
+  // If attendanceData is an array
+  if (Array.isArray(attendanceData)) {
+    for (let i = 0; i < attendanceData.length; i++) {
+      const { student_id, isPresent } = attendanceData[i];
 
-  //
-  for (let i = 0; i < attendanceData.length; i++) {
-    const { student_id, isPresent } = attendanceData[i]
-    const data = { student: student_id, isPresent, markedBy: teacher_id, markedAt: today }
-    console.log(data)
-    const attendanceMarked = new Attendance(data)
-    await attendanceMarked.save()
+      // Check if attendance has already been marked for the student today
+      const existingAttendance = await Attendance.findOne({
+        student: student_id,
+        markedAt: today
+      });
+
+      if (existingAttendance) {
+        throw new Error(`Attendance has already been marked for student ${student_id} today`);
+      }
+
+      const data = { student: student_id, isPresent, markedBy: teacher_id, markedAt: today };
+      console.log(data);
+      const attendanceMarked = new Attendance(data);
+      await attendanceMarked.save();
+    }
+  } else { // If attendanceData is an object
+    const { student_id, isPresent } = attendanceData;
+
+    // Check if attendance has already been marked for the student today
+    const existingAttendance = await Attendance.findOne({
+      student: student_id,
+      markedAt: today
+    });
+
+    if (existingAttendance) {
+      throw new Error(`Attendance has already been marked for student ${student_id} today`);
+    }
+
+    const data = { student: student_id, isPresent, markedBy: teacher_id, markedAt: today };
+    console.log(data);
+    const attendanceMarked = new Attendance(data);
+    await attendanceMarked.save();
   }
 }
 

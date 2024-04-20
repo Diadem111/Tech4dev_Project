@@ -151,7 +151,7 @@ const getClassScheduleByIdAndDelete = async (req, res) => {
 // get current class schedule by the class of the student
 const getClassScheduleByClass = async (req, res) => {
     try {
-      const getscheduleClass = await classScheduleService.getAllClassSchedule(req.user, req.user.role, req.user.class)
+      const getscheduleClass = await classScheduleService.getAllClassSchedule(req.user, req.user.role)
       return res.status(201).json(getscheduleClass)
     } catch (err) {
       return res.status(500).json({ error: err.message })

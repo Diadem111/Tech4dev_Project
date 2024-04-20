@@ -13,7 +13,7 @@ const AssessmentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subject',
     required: true
-  },
+   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Teacher',

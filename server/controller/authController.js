@@ -167,52 +167,53 @@ const resetPassword = async (req,res) => {
 // get dashboard based on authorization from headers
 const getdashBoard = async (req,res) => {
     try {
-        // console.log(req)
- const result = await userServices.getDashboard(req)
+        console.log(req.user)
+        let dd= req.user
+ const result = await userServices.getDashboard(dd)
  res.status(200).json({message:"welcome User", result, status:true})
 
     }catch(err){
         res.status(501).json({error:err.message})
     }
 }
-  const deleteTeacherTable = async (req, res) => {
+  const allUserTable = async (req, res) => {
     try {
         // Delete the TeacherTable collection
         const result = await User.find({});
-        res.status(200).json({ message: 'TeacherTable deleted successfully', result });
+        res.status(200).json({ message: 'TeacherTable successfully', result });
     } catch (error) {
         console.error('Error deleting TeacherTable:', error);
         res.status(500).json({ message: 'An error occurred while deleting TeacherTable' });
     }
 };
 
-const deleteTeacher = async (req, res) => {
+const allTeacher = async (req, res) => {
     try {
         // Delete the TeacherTable collection
         const result = await Teacher.find({});
-        res.status(200).json({ message: 'TeacherTable deleted successfully', result });
+        res.status(200).json({ message: 'TeacherTable  successfully', result });
     } catch (error) {
         console.error('Error deleting TeacherTable:', error);
         res.status(500).json({ message: 'An error occurred while deleting TeacherTable' });
     }
 };
 
-const deleteStudent = async (req, res) => {
+const allStudent = async (req, res) => {
     try {
         // Delete the TeacherTable collection
         const result = await Student.find({});
-        res.status(200).json({ message: 'TeacherTable deleted successfully', result });
+        res.status(200).json({ message: 'TeacherTable successfully', result });
     } catch (error) {
         console.error('Error deleting TeacherTable:', error);
         res.status(500).json({ message: 'An error occurred while deleting TeacherTable' });
     }
 };
 
-const ApplicationStudent = async (req, res) => {
+const allApplicationStudent = async (req, res) => {
     try {
         // Delete the TeacherTable collection
         const result = await Application.find();
-        res.status(200).json({ message: 'TeacherTable deleted successfully', result });
+        res.status(200).json({ message: 'TeacherTable  successfully', result });
     } catch (error) {
         console.error('Error deleting TeacherTable:', error);
         res.status(500).json({ message: 'An error occurred while deleting TeacherTable' });
@@ -223,4 +224,4 @@ const ApplicationStudent = async (req, res) => {
 
 
 module.exports = { home, registerUser, userVerifyOtp,loginUser,forgotPassword,resetPassword,getdashBoard,
-     deleteTeacherTable, deleteStudent, deleteTeacher,ApplicationStudent }
+     allUserTable, allStudent, allTeacher,allApplicationStudent }

@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const {classSchedule} = require("../controller")
-const {isLoggedIn, isStudent} = require("../middleware/auth")
+const {isLoggedIn, isStudent,authMiddleware} = require("../middleware/auth")
 
-router.get("/scheduleByClass",isLoggedIn,isStudent, classSchedule.getClassScheduleByClass)
+router.get("/scheduleByClass",authMiddleware, classSchedule.getClassScheduleByClass)
 
 // Define routes
 
