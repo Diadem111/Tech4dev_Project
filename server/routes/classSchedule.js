@@ -13,8 +13,8 @@ router.get("/weeklyschedule", classSchedule.getScheduleByCurrentWeek)//done
 router.get("/schedule/:id",classSchedule.getClassScheduleById) //done
 router.put("/update-schedule/:id",classSchedule.getClassScheduleByIdAndUpdate) //done
 router.delete("/delete-schedule/:id",classSchedule.getClassScheduleByIdAndDelete ) //done
-router.get("/all-schedule", isLoggedIn,classSchedule.getAllClassSchedule) //done
-
+router.get("/all-schedule", classSchedule.getAllClassSchedule) //done
+router.get("/scheduleByFilter", classSchedule.getClassScheduleByFilter)
 
 module.exports = router
 

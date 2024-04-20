@@ -14,7 +14,7 @@ const getScheduleByCurrentWeek  =  async (startTime, endTime) => {
 
 const getAllClassSchedule = async (requestUser) => {
     // ensure the user isLoggedIn
-    if (!requestUser) throw new Error(`Unauthorized`)
+    // if (!requestUser) throw new Error(`Unauthorized`)
 
     // get all the schedule
     const classTimeTable = await ClassSchedule.find()
@@ -23,13 +23,11 @@ const getAllClassSchedule = async (requestUser) => {
     return classTimeTable
 }
 
-
 const getClassScheduleByClass = async (requestUser, requestRole) => {
     // ensure the user isLoggedIn and is a student 
     // if (!requestUser || requestRole != "student") throw new Error(`Unauthorized: Only student can view`)
 
     let studentClass = requestUser.class;
-
     // get the class of the loggedIn student
     // const studentClass = requestClass;
 
@@ -65,6 +63,28 @@ const getClassScheduleByIdAndDelete = async (scheduleId) => {
 }
 
 
+// get class-chedule by filter 
+const getScheduleByFilter = async (filter) => {
+    console.log(filter)
+    const query = {};
+  
+    // // Iterate through each key-value pair in the filter object
+    // // Iterate through each key-value pair in the filter object
+    for (const key in filter) {
+      if (Object.hasOwnProperty.call(filter, key) && key !== '_id') {
+        // Exclude the _id key and construct the query based on other key-value pairs
+        query[key] = filter[key];
+      }
+    }
+    console.log(query)
+    const schedules = await ClassSchedule.find(query)
+    if (
+      !schedules || schedules.length === 0
+    ) throw new Error('No schedule found for the filter you provided')
+    return schedules
+  }
+  
+
 module.exports = {
     getScheduleByCurrentWeek,
     // getAllClassSchedule
@@ -73,4 +93,5 @@ module.exports = {
     getClassScheduleById,
     getClassScheduleByIdAndUpdate,
     getClassScheduleByIdAndDelete,
+    getScheduleByFilter
 }

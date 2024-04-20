@@ -102,14 +102,15 @@ async function ScheduleTimeTable(req, res) {
 
 const getAllClassSchedule = async (req, res) => {
   try {
-    const user = req.user
-    console.log(user)
-    const schedule = await classScheduleService.getAllClassSchedule(user)
+    // const user = req.user
+    // console.log(user)
+    const schedule = await classScheduleService.getAllClassSchedule()
     return res.status(201).json({ message: "success", schedule })
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
 }
+
 
 
 const getClassScheduleById = async (req, res) => {
@@ -192,6 +193,23 @@ const getClassScheduleByClass = async (req, res) => {
     }
 }
 
+
+// class scheudle by any filter
+const getClassScheduleByFilter = async (req, res) => {
+  try {
+    console.log(req.query)
+    filter = req.query
+    // console.log(filter)
+    const questions = await classScheduleService.getScheduleByFilter(filter)
+    return res.status(200).json(questions)
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message
+    })
+  }
+}
+
+
 module.exports = {
   home,
 //   getScheduleByCurrentWeek,
@@ -203,4 +221,5 @@ module.exports = {
   getClassScheduleByIdAndDelete,
   getClassScheduleByClass ,
   getScheduleByCurrentWeek,
+  getClassScheduleByFilter,
 }
