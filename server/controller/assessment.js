@@ -139,6 +139,7 @@ const setAssessmentTotalMarks = async (req, res) => {
 // Assessment record
 const createAssessmentRecord = async (req, res) => {
   try {
+    console.log(req.body)
     const assessmentRecord = await assessmentService
       .createAssessmentRecord(
         req.params.id,

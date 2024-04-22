@@ -31,9 +31,7 @@ const UserSchema = new Schema(
     password: {
       type: String
     },
-    confirmPassword: {
-      type: String
-    },
+   
     address: {
      type:String
     },

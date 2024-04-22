@@ -18,100 +18,74 @@ const home = (req, res) => {
 //   register a new user
 const registerUser = async (req, res) => {
     try {
-        const { role, ...userData} = req.body;
-        // console.log(userData)
+
+        const { role, classTaught, subjectsTaught, ...userData} = req.body;
+        // specify role 
+
+        if (!role) {
+            return res.status(400).json({ message: "Role not specified", status: false });
+        }
+
+        const classTaughtArray = JSON.parse(classTaught);
+        const subjectsTaughtArray = JSON.parse(subjectsTaught);
+
         const userExist = await User.findOne({
             email: userData.email,
-        })
+        });
+        
         if (userExist) {
-            res.status(400).json({ message: "Email Exist!", status: false })
+            return res.status(400).json({ message: "Email Exists!", status: false });
         }
-        // check if password == to confirmpassword
-        else {
-            if (userData.password !== userData.confirmPassword) {
-                throw new Error("Passwords do not match!")
-            } else {
-                if (req.file) {
-                    const uploadToCloud = await Cloudinary.uploader.upload(req.file.path);
-                    // console.log(uploadToCloud)
 
-                    // upload image to cloudinary
+        if (req.file) {
+            // Your file upload code here
+        }
 
-                    if (!uploadToCloud) {
-                        throw new Error("FAILED TO UPLOAD TO CLOUD")
-                    }
-                    let imgLink = uploadToCloud.url
+        const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString();
+        const expireOtp = new Date();
+        expireOtp.setTime(expireOtp.getTime() + (30 * 60 * 1000));
 
+        const newUser = new User({
+            ...userData,
+            // Set other user properties
+        });
 
-                     //    generation of verification otp
-                     const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString() // Generate a 4-digit OTP
-                     const expireOtp = new Date();
-                     expireOtp.setTime(expireOtp.getTime() + (30 * 60 * 1000));  //set expire time to 30 minutsees
- 
-                    // create new instance of user
-                    const newUser = new User({
-                        ...userData,
-                        passport: imgLink,
-                        otp: verifyOtp,   
-                        otpExpiry: expireOtp,
-                        // address: {userDataaddress}
-                    })
+        await newUser.save();
 
+        const subject = "Welcome to SchoolBase!";
+        const htmlContent = `<h3>Dear ${userData.firstName},</h3>
+            <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
+            <p>Your OTP is : ${verifyOtp}, will expire in ${expireOtp}</p>
+            <p>Best Regards,</p>
+            <p>SCHOOLBASE team</p>`;
 
-                    // save the user to the database
-                    await newUser.save()
+        let newRecord;
+        if (role === "student") {
+            // Your student registration code here
+            const studentData = {user:newUser._id, ...userData};
+            const newStudent = new Student({
+                ...studentData,
+                role:role
+            })
+        } else if (role === "teacher") {
+            const teacherData = { user: newUser._id, ...userData };
+            const newTeacher = new Teacher({
+                ...teacherData,
+                role: role,
+                classTaught: { list: classTaughtArray },
+                subjectsTaught: { list: subjectsTaughtArray },
+            });
+            newRecord = await newTeacher.save();
+            await sendOTPByEmail(userData.email, subject, htmlContent);
+        } else {
+            return res.status(400).json({ message: "Invalid Role" });
+        }
 
-                    // send OTP by sendMail\
-                    const subject = "Welcome to SchoolBase!"
-                    const htmlContent = `<h3>Dear ${userData.firstName},</h3>
-                    <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
-                    <p>Your OTP is : ${verifyOtp} , will expire in ${expireOtp}</p>
-                    <p>Best Regards,</p>
-                    <p>SCHOOLBASE team</p>`
-                    await sendOTPByEmail(userData.email, subject, htmlContent)
-                   
-                   
-                    //create new record based on role
-                    let newRecord;
-                    if (role === "student") {
-
-                        // set the user id into the user as indicated in the model
-                        const studentData = { user: newUser._id, ...userData }
-                        const newStudent = new Student({
-                            ...studentData,
-                            role: role,
-                           
-
-                        })
-                        newRecord = await newStudent.save()
-                        res.status(200).json({message:"success", newRecord})
-
-                    } else if (role === "teacher") {
-                        const teacherData = { user: newUser._id, ...userData }
-                        const newTeacher = new Teacher({
-                            ...teacherData,
-                            role: role,
-                            class: {list: userData.class},
-                            subjectsTaught: {list: userData.subjectsTaught},
-                            
-
-                        })
-                        newRecord = await newTeacher.save()
-                        res.status(200).json({message:"success", newRecord})
-                    } else {
-                        res.status(400).json({message:"Role Invalid"})
-                    }
-
-                             }
-
-            }
-        }   
+        res.status(200).json({ message: "Success", newRecord });
     } catch (err) {
-        res.status(501).json({ error: err.message })
-
+        res.status(501).json({ error: err.message });
     }
-}
-
+};
 
 const userVerifyOtp = async (req, res) => {
     try {

@@ -54,9 +54,9 @@ const applicationSchema = new Schema(
       type: Boolean,
       default: false
     },
-    // registeredCourses: {
-    //   list: [String]
-    // },
+    registeredCourses: {
+      list: [String]
+    },
     dateAdmitted: {
       type: Date
     },
@@ -72,6 +72,6 @@ const applicationSchema = new Schema(
   { timestamps: true }
 )
 
-const Application = mongoose.model('application', applicationSchema)
+const Application = mongoose.model('applicationTable', applicationSchema)
 
 module.exports = Application

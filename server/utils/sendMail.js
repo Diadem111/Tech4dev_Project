@@ -34,38 +34,3 @@ async function sendOTPByEmail(email, userName, subject,htmlContent) {
 }
 
 module.exports = { sendOTPByEmail };
-// const mailjet = require('node-mailjet').connect(
-//     process.env.MJ_APIKEY_PUBLIC,
-//     process.env.MJ_APIKEY_PRIVATE
-//   );
-  
-//   const sendOTP = async (email, verifyOtp,expireOtp  ) => {
-//     const request = mailjet.post('send', { version: 'v3.1' }).request({
-//       Messages: [
-//         {
-//           From: {
-//             Email: 'bowaleadetunji@gmail.com',
-//             Name: 'SCHOOLBASE team'
-//           },
-//           To: [
-//             {
-//               Email: email,
-//               Name: 'Recipient Name'
-//             }
-//           ],
-//           Subject: 'Your OTP for registration',
-//           TextPart: `Your OTP is: ${verifyOtp}, kindly note that the OTP will expire in ${expireOtp }`
-//         }
-//       ]
-//     });
-  
-//     try {
-//       await request;
-//       console.log('Email sent successfully');
-//     } catch (err) {
-//       console.error('Error sending email:', err.statusCode, err.message);
-//       throw new Error('Failed to send email');
-//     }
-//   };
-  
-//   module.exports = { sendOTP };
