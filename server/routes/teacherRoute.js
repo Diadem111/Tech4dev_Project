@@ -10,7 +10,7 @@ router.get('/studentPresent', attendance.getStudentsPresentData) //done
 router.post('/markAttendance',authMiddleware, attendance.markAttendance) //DONE
 router.get("/alluser",authMiddleware, userController.allUserTable)
 router.get("/allstudent", userController.allStudent)
-router.get("/allteacher", authMiddleware, userController.allTeacher)
+router.get("/allteacher", userController.allTeacher)
 router.get("/allApplicant",authMiddleware, userController.allApplicationStudent)
 
 

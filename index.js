@@ -14,7 +14,7 @@ connectDB()
 // const createManyQuestions = require('./server/utils/seed')
 // createManyQuestions()
 
-app.use(cors())
+app.use(cors("*"))
 app.use(bodyParser.json())
 app.use(
     bodyParser.urlencoded({

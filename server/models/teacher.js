@@ -8,9 +8,9 @@ const TeacherSchema = new mongoose.Schema({
   classTaught: {
     list: [String]
   },
-  subjectsTaught: {
-    list: [String]
-  },
+  // subjectsTaught: {
+  //   list: [String]
+  // },
   role: {
     type: String,
     default: 'staff'
