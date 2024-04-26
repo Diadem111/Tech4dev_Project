@@ -91,7 +91,7 @@ const registerUser = async (req, res) => {
         }
         console.log(newRecord);
 
-        res.status(200).send({ message: "Success", status: true });
+        res.status(200).send({  status:true, newRecord });
       }
     }
   } catch (err) {
