@@ -90,8 +90,9 @@ const registerUser = async (req, res) => {
           res.status(400).send({ message: "Invalid Role" });
         }
         console.log(newRecord);
+        let  frontendInfo = newRecord
 
-        res.status(200).send({  status:true, newRecord });
+        res.status(200).send({  status:true, message: "success",frontendInfo });
       }
     }
   } catch (err) {
