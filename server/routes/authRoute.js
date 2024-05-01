@@ -6,7 +6,8 @@ const {isLoggedIn, isTeacher, authMiddleware} = require("../middleware/auth")
 
 // define routes
 router.get("/home", userController.home)
-router.post("/signup", upload.single("passport"),userController.registerUser)
+router.post("/signup", upload.single("passport"),userController.signupTeacher)
+router.post("/signupStudent", upload.single("passport"),userController.signupStudent)
 router.post("/verifyOtp", userController.userVerifyOtp)
 router.post("/login", userController.loginUser)
 router.post("/forgot-password",userController.forgotPassword)

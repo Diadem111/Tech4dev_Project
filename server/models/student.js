@@ -11,7 +11,9 @@ const StudentSchema = new Schema(
     class: {
       type: String
     },
-   
+    phoneNumber: {
+      type: String
+    },
     dateAdmitted: {
       type: Date
     },

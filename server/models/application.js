@@ -8,6 +8,9 @@ const applicationSchema = new Schema(
       ref: 'User',
       required: true
     },
+    phoneNumber: {
+      type: String
+    },
   
      dateOfBirth: {
       type: Date
@@ -53,9 +56,6 @@ const applicationSchema = new Schema(
     isAdmitted: {
       type: Boolean,
       default: false
-    },
-    registeredCourses: {
-      list: [String]
     },
     dateAdmitted: {
       type: Date

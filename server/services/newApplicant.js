@@ -13,7 +13,6 @@ const createStudentService = async (applicationData, requestFiles) => {
       interests,
       previousSchools,
       skills,
-      registeredCourses,
       ...newApplicantInfo
     } = applicationData;
 
@@ -66,7 +65,6 @@ const createStudentService = async (applicationData, requestFiles) => {
             extracurricular: { list: extracurricular },
             interests: { list: interests },
             skills: { list: skills },
-            registeredCourses: { list: registeredCourses },
           };
 
           newStudentInfo = new Application(newStudent);

@@ -35,22 +35,8 @@ const UserSchema = new Schema(
     address: {
      type:String
     },
-    // religion: {
-    //   type: String
-    // },
-    // stateOfOrigin: {
-    //   type: String
-    // },
-    // nationality: {
-    //   type: String
-    // },
-    // maritalStatus: {
-    //   type: String,
-    //   enum: ['single', 'married', 'widowed']
-    // },
-    phoneNumber: {
-      type: String
-    },
+    
+   
     passport:{
      type:String
         },

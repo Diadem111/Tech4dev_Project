@@ -14,37 +14,127 @@ const home = (req, res) => {
 };
 
 //   register a new user
-const registerUser = async (req, res) => {
+// const registerUser = async (req, res) => {
+//   try {
+//     console.log(req.file);
+//     // destructure the data
+//     const { role, classTaught, ...userData } = req.body;
+
+//     // make imgLink and uploadTocloud a variable
+//     let imgLink;
+//     let uploadToCloud;
+
+//     if (!role) {
+//       res.status(400).send({ message: "Role not specified", status: false });
+//     }
+
+//     // const classTaughtArray = JSON.parse(classTaught);
+//     // const subjectsTaughtArray = JSON.parse(subjectsTaught);
+
+//     // ckeck if user exist
+//     const userExist = await User.findOne({
+//       email: userData.email,
+//     });
+
+//     if (userExist) {
+//       res.status(400).send({ message: "Email Exists!", status: false });
+//     }
+
+//     if (req.file) {
+//       console.log("here")
+//       uploadToCloud = await Cloudinary.uploader.upload(req.file.path);
+//       imgLink = uploadToCloud.url;
+//       console.log(imgLink)
+
+//       // create instance of user and save
+//       const newUser = await new User({
+//         ...userData,
+//         passport: imgLink,
+//         // Set other user properties
+//       });
+
+//       let userSaved = await newUser.save();
+//       console.log(userSaved)
+
+//       // if user is saved then go to the next function
+//       if (userSaved) {
+//         const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString();
+//         const expireOtp = new Date();
+//         expireOtp.setTime(expireOtp.getTime() + 30 * 60 * 1000);
+
+//         // html for the otp
+//         const subject = "Welcome to SchoolBase!";
+//         const htmlContent = `
+//     <h3>Dear ${userData.firstName},</h3>
+//     <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
+//     <p>Your OTP is : ${verifyOtp}, will expire in ${expireOtp}</p>
+//     <p>Best Regards,</p>
+//     <p>SCHOOLBASE team</p> `;
+
+
+//         let newRecord;
+//         if (role === "student") {
+//           // Your student registration code here
+//           const studentData = { user: newUser._id, ...userData };
+//           const newStudent = new Student({
+//             ...studentData,
+//             role: role,
+//           });
+//         }
+//         if (role === "teacher") {
+//           const teacherData = { user: newUser._id, ...userData };
+//           const newTeacher = new Teacher({
+//             ...teacherData,
+//             role: role,
+//             classTaught: { list: classTaught },
+//             // subjectsTaught: { list: subjectsTaughtArray },
+//           });
+//           newRecord = await newTeacher.save();
+//           console.log(newRecord)
+//           await sendOTPByEmail(userData.email, subject, htmlContent);
+//         } 
+//         console.log(newRecord);
+//         let frontendInfo = newRecord
+
+//         res.status(200).send({ status: true, message: "success" });
+//       }
+//     }
+//   } catch (err) {
+//     res.status(501).send({ error: err.message });
+//   }
+// };
+
+const signupTeacher = async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(req.file);
     // destructure the data
     const { role, classTaught, ...userData } = req.body;
 
-    // make imgLink and uploadTocloud a variable
-    let imgLink;
-    let uploadToCloud;
-
     if (!role) {
-      res.status(400).send({ message: "Role not specified", status: false });
+      return res.status(400).send({ message: "Role not specified", status: false });
     }
 
-    // const classTaughtArray = JSON.parse(classTaught);
-    // const subjectsTaughtArray = JSON.parse(subjectsTaught);
-
-    // ckeck if user exist
+    // Check if user exists
     const userExist = await User.findOne({
       email: userData.email,
     });
 
     if (userExist) {
-      res.status(400).send({ message: "Email Exists!", status: false });
+      return res.status(400).send({ message: "Email Exists!", status: false });
     }
 
-    if (req.file) {
-      uploadToCloud = await Cloudinary.uploader.upload(req.file.path);
-      imgLink = uploadToCloud.url;
+    let imgLink;
+    let uploadToCloud;
 
-      // create instance of user and save
+    if (req.file) {
+      try {
+        uploadToCloud = await Cloudinary.uploader.upload(req.file.path);
+        imgLink = uploadToCloud.url;
+      } catch (cloudinaryErr) {
+        console.error("Cloudinary Error:", cloudinaryErr.message);
+        return res.status(500).send({ message: "Failed to upload image to Cloudinary", status: false });
+      }
+
       const newUser = await new User({
         ...userData,
         passport: imgLink,
@@ -52,54 +142,122 @@ const registerUser = async (req, res) => {
       });
 
       let userSaved = await newUser.save();
+      console.log(userSaved)
 
-      // if user is saved then go to the next function
-      if (userSaved) {
-        const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString();
-        const expireOtp = new Date();
-        expireOtp.setTime(expireOtp.getTime() + 30 * 60 * 1000);
 
-        // html for the otp
-        const subject = "Welcome to SchoolBase!";
-        const htmlContent = `<h3>Dear ${userData.firstName},</h3>
-            <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
-            <p>Your OTP is : ${verifyOtp}, will expire in ${expireOtp}</p>
-            <p>Best Regards,</p>
-            <p>SCHOOLBASE team</p>`;
+      // Create instance of teacher and save
+         const teacherData = { user: newUser._id, ...userData };
 
-        let newRecord;
-        if (role === "student") {
-          // Your student registration code here
-          const studentData = { user: newUser._id, ...userData };
-          const newStudent = new Student({
-            ...studentData,
-            role: role,
-          });
-        }
-        if (role === "teacher") {
-          const teacherData = { user: newUser._id, ...userData };
-          const newTeacher = new Teacher({
-            ...teacherData,
-            role: role,
-            classTaught: { list: classTaught },
-            // subjectsTaught: { list: subjectsTaughtArray },
-          });
-          newRecord = await newTeacher.save();
-          await sendOTPByEmail(userData.email, subject, htmlContent);
-        } else {
-          res.status(400).send({ message: "Invalid Role" });
-        }
-        console.log(newRecord);
-        let  frontendInfo = newRecord
+      const newTeacher = new Teacher({
+        ...teacherData,
+        role: role,
+        classTaught: { list: classTaught },
+      });
 
-        res.status(200).send({  status:true, message: "success",frontendInfo });
-      }
+      const newRecord = await newTeacher.save();
+      console.log(newRecord);
+
+      const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString();
+      const expireOtp = new Date();
+      expireOtp.setTime(expireOtp.getTime() + 30 * 60 * 1000);
+
+      // HTML content for the OTP email
+      const subject = "Welcome to SchoolBase!";
+      const htmlContent = `
+        <h3>Dear ${userData.firstName},</h3>
+        <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
+        <p>Your OTP is : ${verifyOtp}, will expire in ${expireOtp}</p>
+        <p>Best Regards,</p>
+        <p>SCHOOLBASE team</p> `;
+
+      // Send OTP email
+      await sendOTPByEmail(userData.email, subject, htmlContent);
+
+      return res.status(200).send({ status: true, message: "success" });
     }
   } catch (err) {
+    console.error(err);
+    res.status(501).send({ error: err.message });
+  }
+};
+// register student
+const signupStudent = async (req, res) => {
+  try {
+    console.log(req.file);
+    // destructure the data
+    const { role, ...userData } = req.body;
+
+    if (!role) {
+      return res.status(400).send({ message: "Role not specified", status: false });
+    }
+
+    // Check if user exists
+    const userExist = await User.findOne({
+      email: userData.email,
+    });
+
+    if (userExist) {
+      return res.status(400).send({ message: "Email Exists!", status: false });
+    }
+
+    let imgLink;
+    let uploadToCloud;
+
+    if (req.file) {
+      try {
+        uploadToCloud = await Cloudinary.uploader.upload(req.file.path);
+        imgLink = uploadToCloud.url;
+      } catch (cloudinaryErr) {
+        console.error("Cloudinary Error:", cloudinaryErr.message);
+        return res.status(500).send({ message: "Failed to upload image to Cloudinary", status: false });
+      }
+
+      const newUser = await new User({
+                ...userData,
+                passport: imgLink,
+                // Set other user properties
+              });
+        
+              let userSaved = await newUser.save();
+              console.log(userSaved)
+        
+
+      // Create instance of student and save
+           const studentData = { user: newUser._id, ...userData };
+
+      const newStudent = new Student({
+        ...studentData,
+        role: role,
+      });
+
+      const newRecord = await newStudent.save();
+      console.log(newRecord);
+
+      const verifyOtp = Math.floor(3000 + Math.random() * 5000).toString();
+      const expireOtp = new Date();
+      expireOtp.setTime(expireOtp.getTime() + 30 * 60 * 1000);
+
+      // HTML content for the OTP email
+      const subject = "Welcome to SchoolBase!";
+      const htmlContent = `
+        <h3>Dear ${userData.firstName},</h3>
+        <p>Welcome to SchoolBase! You have successfully registered as a ${role}.</p>
+        <p>Your OTP is : ${verifyOtp}, will expire in ${expireOtp}</p>
+        <p>Best Regards,</p>
+        <p>SCHOOLBASE team</p> `;
+
+      // Send OTP email
+      await sendOTPByEmail(userData.email, subject, htmlContent);
+
+      return res.status(200).send({ status: true, message: "success" });
+    }
+  } catch (err) {
+    console.error(err);
     res.status(501).send({ error: err.message });
   }
 };
 
+// verify otp
 const userVerifyOtp = async (req, res) => {
   try {
     const { otp } = req.body;
@@ -215,7 +373,9 @@ const allApplicationStudent = async (req, res) => {
 
 module.exports = {
   home,
-  registerUser,
+  // registerUser,
+  signupTeacher,
+  signupStudent,
   userVerifyOtp,
   loginUser,
   forgotPassword,
